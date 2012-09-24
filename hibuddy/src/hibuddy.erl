@@ -37,6 +37,7 @@ start(_Type, _Args) ->
                                                  {keyfile,  "priv/ssl/key.pem"},
                                                  {password, "cowboy"}],
                           cowboy_http_protocol, [{dispatch, Routes}]),
+    ets:new(watchers, [set, public, named_table]),
     hibuddy_sup:start_link().
 
 

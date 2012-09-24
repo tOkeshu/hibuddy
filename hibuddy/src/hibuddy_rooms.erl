@@ -31,7 +31,7 @@ fail(Req) ->
             cowboy_http_req:reply(405, [], <<"">>, Req);
         %% /rooms/:room => Only supports websockets
         {<<"flux">>, Req} ->
-            register(roommate, self()),
+            ets:insert(watchers, {self(), self()}),
             Headers = [{<<"Content-Type">>, <<"multipart/x-mixed-replace; boundary=--guillotine">>}],
             {ok, Req2} = cowboy_http_req:chunked_reply(200, Headers, Req),
             stream(Req2)
@@ -50,6 +50,7 @@ stream(Req) ->
     stream(Req).
 
 terminate(_Req, _State) ->
+    ets:delete(watchers, {w, self()}),
     ok.
 
 %% websockets
@@ -58,19 +59,14 @@ websocket_init(_Any, Req, []) ->
     {ok, Req, undefined, hibernate}.
 
 websocket_handle({text, DataURL}, Req, State) ->
-    case whereis(roommate) of
-        Pid when is_pid(Pid) ->
-            <<"data:image/jpeg;base64,", Base64Image/binary>> = DataURL,
-            roommate ! {frame, base64:decode(Base64Image)};
-        _Else ->
-            nop
-    end,
+    <<"data:image/jpeg;base64,", Base64Image/binary>> = DataURL,
+    Image = base64:decode(Base64Image),
+    [Watcher ! {frame, Image} ||
+        {_Key, Watcher} <- ets:tab2list(watchers)],
     {ok, Req, State};
 websocket_handle(_Any, Req, State) ->
     {ok, Req, State}.
 
-websocket_info({roommate, Roommate}, Req, _State) ->
-    {ok, Req, Roommate, hibernate};
 websocket_info(_Info, Req, State) ->
     {ok, Req, State, hibernate}.
 
