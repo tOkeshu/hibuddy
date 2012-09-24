@@ -10,8 +10,8 @@ start() ->
 
 % GET    /             => landing page
 % POST   /rooms        => new room
-% GET    /room/{room}  => get into the room
-% DELETE /room/{room}  => destroy the room
+% GET    /rooms/{room} => get into the room
+% DELETE /rooms/{room} => destroy the room
 
 % GET    /rooms        => not allowed
 % POST   /rooms/{room} => not allowed
