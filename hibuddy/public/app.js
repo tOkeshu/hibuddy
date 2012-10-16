@@ -5,10 +5,10 @@ $(document).ready(function() {
 
     $('#start-video').click(function() {
         window.navigator.mozGetUserMedia({video: true}, function(stream) {
-            video1.src = stream;
+            video1.mozSrcObject = stream;
             video1.play();
             open(function() {
-                interv = setInterval(capture, 100);
+                interv = setInterval(capture, 200);
             });
         }, function(err) {
             video1.pause();
