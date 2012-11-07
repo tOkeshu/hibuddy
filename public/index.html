@@ -17,14 +17,12 @@
       <h1 class="title"><a href="/">Hi Buddy !</a></h1>
     </header>
 
-    <div>
-      <input id="start-video" type="button" value="Video"/>
-      <input id="stop-video" type="button" value="stop"/>
-    </div>
-
     <article>
-      <video id="video1" width="300px" height="300px" style="float: left"></video>
-      <canvas id="feedback" width="300px" height="300px" style="float: right"/>
+      <video id="local-video" width="300px" height="300px"></video>
+      <video id="remote-video" width="300px" height="300px"></video>
+
+      <audio id="local-audio" muted></audio>
+      <audio id="remote-audio"></audio>
     </article>
 
 
