@@ -7,7 +7,7 @@ app.use(express.bodyParser());
 app.use('/static', express.static(__dirname + '/public'));
 
 app.get("/signalling", function(req, res) {
-    console.log("/signalling connection opened");
+    console.log('new friend');
 
     res.writeHead(200, {
         "Content-Type":  "text/event-stream",
@@ -23,6 +23,12 @@ app.get("/signalling", function(req, res) {
     var event = JSON.stringify({type: 'uid', uid: counter++});
     res.write("event: uid\n");
     res.write("data: " + event + "\n\n");
+
+    connections.map(function(c) {
+        c.write("event: newfriend\n");
+        c.write("data: {}\n\n");
+    });
+    connections.push(res);
 });
 
 app.post("/signalling", function(req, res) {

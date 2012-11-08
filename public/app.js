@@ -4,10 +4,17 @@ $(document).ready(function() {
     var remoteVideo = $('#remote-video').get(0);
     var peerConnection = new mozRTCPeerConnection();
     var source = new EventSource("/signalling");
+    var me;
 
     source.addEventListener("uid", function(event) {
         event = JSON.parse(event.data);
-        console.log('UID: ' + event.uid);
+        me    = event.uid;
+        console.log('UID: ' + me);
+
+    });
+
+    source.addEventListener("newfriend", function(event) {
+        event = JSON.parse(event.data);
 
         // Get local video
         navigator.mozGetUserMedia({video: true}, function(stream) {
