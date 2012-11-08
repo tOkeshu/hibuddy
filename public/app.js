@@ -79,9 +79,9 @@ $(document).ready(function() {
 
                 // Get local audio
                 navigator.mozGetUserMedia({audio: true, fake: true},function(stream) {
-                       localAudio.mozSrcObject = stream;
-                       localAudio.play();
-                       peerConnection.addStream(stream);
+                    localAudio.mozSrcObject = stream;
+                    localAudio.play();
+                    peerConnection.addStream(stream);
 
                     // Create offer
                     peerConnection.createAnswer(function(answer) {
