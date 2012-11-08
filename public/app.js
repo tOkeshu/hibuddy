@@ -25,11 +25,26 @@ $(document).ready(function() {
                 peerConnection.createOffer(function(offer) {
                     peerConnection.setLocalDescription(offer, function() {
                         // Send offer
+                        $.ajax({
+                            type: 'POST',
+                            url:  '/signalling',
+                            data: {
+                                type: 'offer',
+                                from: me,
+                                offer: offer
+                            }
+                        });
                     });
                 });
 
             }, function() {});
         }, function() {});
+    });
+
+    source.addEventListener("offer", function(event) {
+        event = JSON.parse(event.data);
+        console.log(event);
+    });
 
     });
 
