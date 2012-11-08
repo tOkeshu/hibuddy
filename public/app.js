@@ -50,9 +50,47 @@ $(document).ready(function() {
 
     source.addEventListener("offer", function(event) {
         event = JSON.parse(event.data);
-        console.log(event);
+
+        if (event.from == me)
+            return;
+
+        peerConnection.setRemoteDescription(event.offer, function() {
+
+            // Get local video
+            navigator.mozGetUserMedia({video: true, fake: true}, function(stream) {
+                localVideo.mozSrcObject = stream;
+                localVideo.play();
+                peerConnection.addStream(stream);
+
+                // Get local audio
+                navigator.mozGetUserMedia({audio: true, fake: true},function(stream) {
+                       localAudio.mozSrcObject = stream;
+                       localAudio.play();
+                       peerConnection.addStream(stream);
+
+                    // Create offer
+                    peerConnection.createAnswer(function(answer) {
+                        peerConnection.setLocalDescription(answer, function() {
+                            // Send offer
+                            $.ajax({
+                                type: 'POST',
+                                url:  '/signalling',
+                                data: {
+                                    type: 'answer',
+                                    from: me,
+                                    answer: answer
+                                }
+                            });
+                        });
+                    }, function() {});
+                }, function() {});
+            }, function() {});
+        });
     });
 
+    source.addEventListener('answer', function(event) {
+        event = JSON.parse(event.data);
+        console.log(event.answer);
     });
 
 });
