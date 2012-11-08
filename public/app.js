@@ -2,9 +2,24 @@ $(document).ready(function() {
     var localVideo = $('#local-video').get(0);
     var localAudio = $('#local-audio').get(0);
     var remoteVideo = $('#remote-video').get(0);
+    var remoteAudio = $('#remote-audio').get(0);
     var peerConnection = new mozRTCPeerConnection();
     var source = new EventSource("/signalling");
     var me;
+
+    peerConnection.onaddstream = function(obj) {
+        console.log(obj);
+        var type = obj.type;
+        if (type == "video") {
+            remoteVideo.mozSrcObject = obj.stream;
+            remoteVideo.play();
+        } else if (type == "audio") {
+            remoteAudio.mozSrcObject = obj.stream;
+            remoteAudio.play();
+        } else {
+            console.log("sender onaddstream of unknown type, obj = " + obj.toSource());
+        }
+    };
 
     source.addEventListener("uid", function(event) {
         event = JSON.parse(event.data);
@@ -91,6 +106,10 @@ $(document).ready(function() {
     source.addEventListener('answer', function(event) {
         event = JSON.parse(event.data);
         console.log(event.answer);
+
+        peerConnection.setRemoteDescription(event.answer, function() {
+            console.log('done');
+        });
     });
 
 });
