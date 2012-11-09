@@ -6,6 +6,10 @@ var counter = 0;
 app.use(express.bodyParser());
 app.use('/static', express.static(__dirname + '/public'));
 
+app.get("/", function(req, res) {
+    res.sendfile(__dirname + '/public/index.html');
+});
+
 app.get("/signalling", function(req, res) {
     console.log('new friend');
 
