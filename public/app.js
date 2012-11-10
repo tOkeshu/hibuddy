@@ -54,7 +54,7 @@ $(document).ready(function() {
         return promise
     };
 
-    var sendOffer = function() {
+    var sendOffer = waitFriend = _.after(2, function() {
         // Create offer
         peerConnection.createOffer(function(offer) {
             peerConnection.setLocalDescription(offer, function() {
@@ -70,13 +70,13 @@ $(document).ready(function() {
                 });
             });
         }, function() {});
-    };
+    });
 
-    var sendAnswer = function() {
-        // Create offer
+    var sendAnswer = waitOffer = _.after(2, function() {
+        // Create answer
         peerConnection.createAnswer(function(answer) {
             peerConnection.setLocalDescription(answer, function() {
-                // Send offer
+                // Send answer
                 $.ajax({
                     type: 'POST',
                     url:  '/signalling',
@@ -88,7 +88,12 @@ $(document).ready(function() {
                 });
             });
         }, function() {});
-    };
+    });
+
+    getVideo().then(getAudio).then(function() {
+        waitFriend();
+        waitOffer();
+    });
 
     source.addEventListener("uid", function(event) {
         event = JSON.parse(event.data);
@@ -99,10 +104,7 @@ $(document).ready(function() {
 
     source.addEventListener("newfriend", function(event) {
         event = JSON.parse(event.data);
-
-        getVideo().then(getAudio).then(function() {
-            sendOffer();
-        });
+        sendOffer();
     });
 
     source.addEventListener("offer", function(event) {
@@ -112,10 +114,7 @@ $(document).ready(function() {
             return;
 
         peerConnection.setRemoteDescription(event.offer, function() {
-
-            getVideo().then(getAudio).then(function() {
-                sendAnswer();
-            });
+            sendAnswer();
         });
     });
 
