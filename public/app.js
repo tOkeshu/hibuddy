@@ -66,7 +66,7 @@ $(document).ready(function() {
     source.addEventListener("offer", function(event) {
         event = JSON.parse(event.data);
 
-        if (event.from == me)
+        if (event.from === me)
             return;
 
         peerConnection.setRemoteDescription(event.offer, function() {
@@ -106,6 +106,9 @@ $(document).ready(function() {
     source.addEventListener('answer', function(event) {
         event = JSON.parse(event.data);
         console.log(event.answer);
+
+        if (event.from === me)
+            return;
 
         peerConnection.setRemoteDescription(event.answer, function() {
             console.log('done');
