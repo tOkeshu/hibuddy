@@ -1,3 +1,4 @@
+var crypto  = require('crypto');
 var express = require('express');
 var app = express();
 var connections = [];
@@ -8,6 +9,15 @@ app.use('/static', express.static(__dirname + '/public'));
 
 app.get("/", function(req, res) {
     res.sendfile(__dirname + '/public/index.html');
+});
+
+app.post("/rooms", function(req, res) {
+    var room = crypto.randomBytes(16).toString('hex');
+    res.redirect('/rooms/' + room);
+});
+
+app.get('/rooms/:room', function(req, res) {
+    res.sendfile(__dirname + '/public/room.html');
 });
 
 app.get("/signalling", function(req, res) {
