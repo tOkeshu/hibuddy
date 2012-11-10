@@ -65,21 +65,21 @@ $(document).ready(function() {
         event = JSON.parse(event.data);
 
         getVideo().then(getAudio).then(function() {
-                // Create offer
-                peerConnection.createOffer(function(offer) {
-                    peerConnection.setLocalDescription(offer, function() {
-                        // Send offer
-                        $.ajax({
-                            type: 'POST',
-                            url:  '/signalling',
-                            data: {
-                                type: 'offer',
-                                from: me,
-                                offer: offer
-                            }
-                        });
+            // Create offer
+            peerConnection.createOffer(function(offer) {
+                peerConnection.setLocalDescription(offer, function() {
+                    // Send offer
+                    $.ajax({
+                        type: 'POST',
+                        url:  '/signalling',
+                        data: {
+                            type: 'offer',
+                            from: me,
+                            offer: offer
+                        }
                     });
                 });
+            });
         });
     });
 
@@ -92,21 +92,21 @@ $(document).ready(function() {
         peerConnection.setRemoteDescription(event.offer, function() {
 
             getVideo().then(getAudio).then(function() {
-                    // Create offer
-                    peerConnection.createAnswer(function(answer) {
-                        peerConnection.setLocalDescription(answer, function() {
-                            // Send offer
-                            $.ajax({
-                                type: 'POST',
-                                url:  '/signalling',
-                                data: {
-                                    type: 'answer',
-                                    from: me,
-                                    answer: answer
-                                }
-                            });
+                // Create offer
+                peerConnection.createAnswer(function(answer) {
+                    peerConnection.setLocalDescription(answer, function() {
+                        // Send offer
+                        $.ajax({
+                            type: 'POST',
+                            url:  '/signalling',
+                            data: {
+                                type: 'answer',
+                                from: me,
+                                answer: answer
+                            }
                         });
-                    }, function() {});
+                    });
+                }, function() {});
             });
         });
     });
