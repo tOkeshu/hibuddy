@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    var localVideo = $('#local-video').get(0);
-    var localAudio = $('#local-audio').get(0);
     var remoteVideo = $('#remote-video').get(0);
     var remoteAudio = $('#remote-audio').get(0);
     var peerConnection = new mozRTCPeerConnection();
@@ -21,6 +19,40 @@ $(document).ready(function() {
         }
     };
 
+    var getVideo = function() {
+        var promise = new RSVP.Promise();
+        var localVideo = $('#local-video').get(0);
+
+        navigator.mozGetUserMedia({video: true}, function(stream) {
+            localVideo.mozSrcObject = stream;
+            localVideo.play();
+            peerConnection.addStream(stream);
+
+            promise.resolve();
+        }, function(err) {
+            promise.reject(err);
+        });
+
+        return promise
+    }
+
+    var getAudio = function() {
+        var promise = new RSVP.Promise();
+        var localAudio = $('#local-audio').get(0);
+
+        navigator.mozGetUserMedia({audio: true}, function(stream) {
+            localAudio.mozSrcObject = stream;
+            localAudio.play();
+            peerConnection.addStream(stream);
+
+            promise.resolve();
+        }, function(err) {
+            promise.reject(err);
+        });
+
+        return promise
+    };
+
     source.addEventListener("uid", function(event) {
         event = JSON.parse(event.data);
         me    = event.uid;
@@ -31,18 +63,7 @@ $(document).ready(function() {
     source.addEventListener("newfriend", function(event) {
         event = JSON.parse(event.data);
 
-        // Get local video
-        navigator.mozGetUserMedia({video: true}, function(stream) {
-            localVideo.mozSrcObject = stream;
-            localVideo.play();
-            peerConnection.addStream(stream);
-
-            // Get local audio
-            navigator.mozGetUserMedia({audio: true},function(stream) {
-                localAudio.mozSrcObject = stream;
-                localAudio.play();
-                peerConnection.addStream(stream);
-
+        getVideo().then(getAudio).then(function() {
                 // Create offer
                 peerConnection.createOffer(function(offer) {
                     peerConnection.setLocalDescription(offer, function() {
@@ -58,9 +79,7 @@ $(document).ready(function() {
                         });
                     });
                 });
-
-            }, function() {});
-        }, function() {});
+        });
     });
 
     source.addEventListener("offer", function(event) {
@@ -71,18 +90,7 @@ $(document).ready(function() {
 
         peerConnection.setRemoteDescription(event.offer, function() {
 
-            // Get local video
-            navigator.mozGetUserMedia({video: true}, function(stream) {
-                localVideo.mozSrcObject = stream;
-                localVideo.play();
-                peerConnection.addStream(stream);
-
-                // Get local audio
-                navigator.mozGetUserMedia({audio: true},function(stream) {
-                    localAudio.mozSrcObject = stream;
-                    localAudio.play();
-                    peerConnection.addStream(stream);
-
+            getVideo().then(getAudio).then(function() {
                     // Create offer
                     peerConnection.createAnswer(function(answer) {
                         peerConnection.setLocalDescription(answer, function() {
@@ -98,8 +106,7 @@ $(document).ready(function() {
                             });
                         });
                     }, function() {});
-                }, function() {});
-            }, function() {});
+            });
         });
     });
 
