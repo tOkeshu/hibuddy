@@ -72,13 +72,13 @@ $(document).ready(function() {
         peerConnection.setRemoteDescription(event.offer, function() {
 
             // Get local video
-            navigator.mozGetUserMedia({video: true, fake: true}, function(stream) {
+            navigator.mozGetUserMedia({video: true}, function(stream) {
                 localVideo.mozSrcObject = stream;
                 localVideo.play();
                 peerConnection.addStream(stream);
 
                 // Get local audio
-                navigator.mozGetUserMedia({audio: true, fake: true},function(stream) {
+                navigator.mozGetUserMedia({audio: true},function(stream) {
                     localAudio.mozSrcObject = stream;
                     localAudio.play();
                     peerConnection.addStream(stream);
