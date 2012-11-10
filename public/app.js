@@ -54,7 +54,8 @@ $(document).ready(function() {
         return promise
     };
 
-    var sendOffer = waitFriend = _.after(2, function() {
+    var sendOffer, waitFriend;
+    sendOffer = waitFriend = _.after(2, function() {
         // Create offer
         peerConnection.createOffer(function(offer) {
             peerConnection.setLocalDescription(offer, function() {
@@ -72,7 +73,8 @@ $(document).ready(function() {
         }, function() {});
     });
 
-    var sendAnswer = waitOffer = _.after(2, function() {
+    var sendAnswer, waitOffer;
+    sendAnswer = waitOffer = _.after(2, function() {
         // Create answer
         peerConnection.createAnswer(function(answer) {
             peerConnection.setLocalDescription(answer, function() {
