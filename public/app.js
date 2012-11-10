@@ -54,6 +54,42 @@ $(document).ready(function() {
         return promise
     };
 
+    var sendOffer = function() {
+        // Create offer
+        peerConnection.createOffer(function(offer) {
+            peerConnection.setLocalDescription(offer, function() {
+                // Send offer
+                $.ajax({
+                    type: 'POST',
+                    url:  '/signalling',
+                    data: {
+                        type: 'offer',
+                        from: me,
+                        offer: offer
+                    }
+                });
+            });
+        }, function() {});
+    };
+
+    var sendAnswer = function() {
+        // Create offer
+        peerConnection.createAnswer(function(answer) {
+            peerConnection.setLocalDescription(answer, function() {
+                // Send offer
+                $.ajax({
+                    type: 'POST',
+                    url:  '/signalling',
+                    data: {
+                        type: 'answer',
+                        from: me,
+                        answer: answer
+                    }
+                });
+            });
+        }, function() {});
+    };
+
     source.addEventListener("uid", function(event) {
         event = JSON.parse(event.data);
         me    = event.uid;
@@ -65,21 +101,7 @@ $(document).ready(function() {
         event = JSON.parse(event.data);
 
         getVideo().then(getAudio).then(function() {
-            // Create offer
-            peerConnection.createOffer(function(offer) {
-                peerConnection.setLocalDescription(offer, function() {
-                    // Send offer
-                    $.ajax({
-                        type: 'POST',
-                        url:  '/signalling',
-                        data: {
-                            type: 'offer',
-                            from: me,
-                            offer: offer
-                        }
-                    });
-                });
-            });
+            sendOffer();
         });
     });
 
@@ -92,21 +114,7 @@ $(document).ready(function() {
         peerConnection.setRemoteDescription(event.offer, function() {
 
             getVideo().then(getAudio).then(function() {
-                // Create offer
-                peerConnection.createAnswer(function(answer) {
-                    peerConnection.setLocalDescription(answer, function() {
-                        // Send offer
-                        $.ajax({
-                            type: 'POST',
-                            url:  '/signalling',
-                            data: {
-                                type: 'answer',
-                                from: me,
-                                answer: answer
-                            }
-                        });
-                    });
-                }, function() {});
+                sendAnswer();
             });
         });
     });
