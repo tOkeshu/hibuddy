@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var peerConnection = new mozRTCPeerConnection();
-    var source = new EventSource("/signalling");
+    var room           = window.location.pathname.split('/')[2];
+    var source         = new EventSource("/rooms/" + room + "/signalling");
     var me;
 
     peerConnection.onaddstream = function(obj) {
@@ -62,7 +63,7 @@ $(document).ready(function() {
                 // Send offer
                 $.ajax({
                     type: 'POST',
-                    url:  '/signalling',
+                    url:  '/rooms/' + room + '/signalling',
                     data: {
                         type: 'offer',
                         from: me,
@@ -81,7 +82,7 @@ $(document).ready(function() {
                 // Send answer
                 $.ajax({
                     type: 'POST',
-                    url:  '/signalling',
+                    url:  '/rooms/' + room + '/signalling',
                     data: {
                         type: 'answer',
                         from: me,
