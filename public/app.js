@@ -1,12 +1,13 @@
 $(document).ready(function() {
-    var remoteVideo = $('#remote-video').get(0);
-    var remoteAudio = $('#remote-audio').get(0);
     var peerConnection = new mozRTCPeerConnection();
     var source = new EventSource("/signalling");
     var me;
 
     peerConnection.onaddstream = function(obj) {
+        var remoteVideo = $('#remote-video').get(0);
+        var remoteAudio = $('#remote-audio').get(0);
         console.log(obj);
+
         var type = obj.type;
         if (type == "video") {
             remoteVideo.mozSrcObject = obj.stream;
