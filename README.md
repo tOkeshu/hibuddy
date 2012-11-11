@@ -56,7 +56,7 @@ Here is a sample configuration for nginx:
 
 Enable your site:
 
-    # ln -s /etc/nginx/sites-available/fipes.example.com /etc/nginx/sites-enabled/hibuddy.example.com
+    # ln -s /etc/nginx/sites-available/hibuddy.example.com /etc/nginx/sites-enabled/hibuddy.example.com
     # /etc/init.d/nginx reload
 
 ### Start the server
