@@ -5,6 +5,8 @@ body {
 }
 
 footer {
+    clear: both;
+    margin-top: 40px;
     text-align: center;
 }
 
@@ -34,5 +36,22 @@ footer {
 }
 .marketing.bullshit p + h4 {
     margin-top: 28px;
+}
+
+article {
+    height: 300px;
+}
+
+video {
+    border: 1px solid #999999;
+    background-color: #999999;
+}
+
+#local-video {
+    float: left;
+}
+
+#remote-video {
+    float: right;
 }
 
