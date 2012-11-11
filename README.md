@@ -14,8 +14,16 @@ videoconferences with your friends.
 
 ### Requirements
 
+  - Firefox with WebRTC enabled
   - `node 0.8.x`
   - `npm 1.1.x`
+
+To use your webcam you will need
+[Firefox nightly](http://nightly.mozilla.org/) with the following
+flags enabled via `about:config`:
+
+    media.navigator.enabled: true
+    media.peerconnection.enabled: true
 
 ### Install the project
 
