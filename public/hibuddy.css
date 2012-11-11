@@ -1,0 +1,38 @@
+/* Twitter Bootstrap Narrow marketing css */
+body {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+footer {
+    text-align: center;
+}
+
+.container-narrow {
+    margin: 0 auto;
+    max-width: 700px;
+}
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+.propaganda {
+    margin: 60px 0;
+    text-align: center;
+}
+.propaganda h1 {
+    font-size: 72px;
+    line-height: 1;
+}
+.propaganda .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+.marketing.bullshit {
+    margin: 60px 0;
+}
+.marketing.bullshit p + h4 {
+    margin-top: 28px;
+}
+
