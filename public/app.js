@@ -64,11 +64,12 @@ $(document).ready(function() {
                 $.ajax({
                     type: 'POST',
                     url:  '/rooms/' + room + '/signalling',
-                    data: {
+                    contentType: 'application/json',
+                    data: JSON.stringify({
                         type: 'offer',
                         from: me,
                         offer: offer
-                    }
+                    }),
                 });
             });
         }, function() {});
@@ -83,11 +84,12 @@ $(document).ready(function() {
                 $.ajax({
                     type: 'POST',
                     url:  '/rooms/' + room + '/signalling',
-                    data: {
+                    contentType: 'application/json',
+                    data: JSON.stringify({
                         type: 'answer',
                         from: me,
                         answer: answer
-                    }
+                    })
                 });
             });
         }, function() {});
