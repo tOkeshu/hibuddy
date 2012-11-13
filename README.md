@@ -87,8 +87,8 @@ for more information.
 ## Bugs/Pitfalls
 
   * For now, because of the lack of full NAT traversal ability in the
-    current Firefox Nightly build (2012-11-13), **the application only
-    work for people which are in the same network**.
+    current Firefox Nightly build (2012-11-13), **it only works if
+    people are in the same network than the application**.
 
 ## License
 
