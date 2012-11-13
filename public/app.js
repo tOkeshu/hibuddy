@@ -1,12 +1,12 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     var peerConnection = new mozRTCPeerConnection();
     var room           = window.location.pathname.split('/')[2];
     var source         = new EventSource("/rooms/" + room + "/signalling");
     var me;
 
     peerConnection.onaddstream = function(obj) {
-        var remoteVideo = $('#remote-video').get(0);
-        var remoteAudio = $('#remote-audio').get(0);
+        var remoteVideo = document.querySelector('#remote-video');
+        var remoteAudio = document.querySelector('#remote-audio');
         console.log(obj);
 
         var type = obj.type;
@@ -21,9 +21,16 @@ $(document).ready(function() {
         }
     };
 
+    var post = function(data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/rooms/' + room + '/signalling', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(JSON.stringify(data));
+    };
+
     var getVideo = function() {
         var promise = new RSVP.Promise();
-        var localVideo = $('#local-video').get(0);
+        var localVideo = document.querySelector('#local-video');
 
         navigator.mozGetUserMedia({video: true}, function(stream) {
             localVideo.mozSrcObject = stream;
@@ -40,7 +47,7 @@ $(document).ready(function() {
 
     var getAudio = function() {
         var promise = new RSVP.Promise();
-        var localAudio = $('#local-audio').get(0);
+        var localAudio = document.querySelector('#local-audio');
 
         navigator.mozGetUserMedia({audio: true}, function(stream) {
             localAudio.mozSrcObject = stream;
@@ -61,16 +68,7 @@ $(document).ready(function() {
         peerConnection.createOffer(function(offer) {
             peerConnection.setLocalDescription(offer, function() {
                 // Send offer
-                $.ajax({
-                    type: 'POST',
-                    url:  '/rooms/' + room + '/signalling',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        type: 'offer',
-                        from: me,
-                        offer: offer
-                    }),
-                });
+                post({type: 'offer', from: me, offer: offer});
             });
         }, function() {});
     });
@@ -81,16 +79,7 @@ $(document).ready(function() {
         peerConnection.createAnswer(function(answer) {
             peerConnection.setLocalDescription(answer, function() {
                 // Send answer
-                $.ajax({
-                    type: 'POST',
-                    url:  '/rooms/' + room + '/signalling',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        type: 'answer',
-                        from: me,
-                        answer: answer
-                    })
-                });
+                post({type: 'answer', from: me, answer: answer})
             });
         }, function() {});
     });
