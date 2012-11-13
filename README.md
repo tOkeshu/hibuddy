@@ -84,6 +84,12 @@ For a more concrete deployment, we recommand you to use `forever`:
 See the [forever documentation](https://github.com/nodejitsu/forever)
 for more information.
 
+## Bugs/Pitfalls
+
+  * For now, because of the lack of full NAT traversal ability in the
+    current Firefox Nightly build (2012-11-13), **the application only
+    work for people which are in the same network**.
+
 ## License
 
 HiBuddy is released under the terms of the
