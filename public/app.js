@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var me;
 
     peerConnection.onaddstream = function(obj) {
-        var remoteVideo = document.querySelector('#remote-video');
-        var remoteAudio = document.querySelector('#remote-audio');
+        var remoteVideo = document.getElementById('remote-video');
+        var remoteAudio = document.getElementById('remote-audio');
         console.log(obj);
 
         var type = obj.type;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var getVideo = function() {
         var promise = new RSVP.Promise();
-        var localVideo = document.querySelector('#local-video');
+        var localVideo = document.getElementById('local-video');
 
         navigator.mozGetUserMedia({video: true}, function(stream) {
             localVideo.mozSrcObject = stream;
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var getAudio = function() {
         var promise = new RSVP.Promise();
-        var localAudio = document.querySelector('#local-audio');
+        var localAudio = document.getElementById('local-audio');
 
         navigator.mozGetUserMedia({audio: true}, function(stream) {
             localAudio.mozSrcObject = stream;
