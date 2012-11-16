@@ -12,13 +12,18 @@ app.get("/", function(req, res) {
 });
 
 app.post("/rooms", function(req, res) {
-    var room = crypto.randomBytes(16).toString('hex');
+    var room = req.param('room') || crypto.randomBytes(16).toString('hex');
     rooms[room] = [];
     res.redirect('/rooms/' + room);
 });
 
 app.get('/rooms/:room', function(req, res) {
-    res.sendfile(__dirname + '/public/room.html');
+    var room  = req.param('room');
+
+    if (room in rooms)
+        res.sendfile(__dirname + '/public/room.html');
+    else
+        res.status(404).sendfile(__dirname + '/public/404.html');
 });
 
 app.get("/rooms/:room/signalling", function(req, res) {
