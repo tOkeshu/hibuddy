@@ -93,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         event = JSON.parse(event.data);
         me    = event.uid;
         console.log('UID: ' + me);
-
     });
 
     source.addEventListener("newfriend", function(event) {
@@ -124,5 +123,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Fullscreen
+    function fullscren() { this.parentNode.mozRequestFullScreen(); }
+    document.getElementById('local-video').addEventListener('click', fullscren);
+    document.getElementById('remote-video').addEventListener('click', fullscren);
 });
 

@@ -42,7 +42,22 @@ article {
     height: 300px;
 }
 
+article:-moz-full-screen #remote-video {
+    width: 100%;
+    height: 100%;
+}
+
+article:-moz-full-screen #local-video {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: auto;
+    height: 200px;
+}
+
 video {
+    height: 300px;
+    width: 300px;
     border: 1px solid #999999;
     background-color: #999999;
 }
