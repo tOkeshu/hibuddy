@@ -1,0 +1,8 @@
+var config = {}
+
+config.etherpad = {};
+
+config.etherpad.url =  '';
+config.etherpad.api_key = '';
+
+module.exports = config;

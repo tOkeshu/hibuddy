@@ -1,5 +1,7 @@
+var config = require('./config')
 var crypto  = require('crypto');
 var express = require('express');
+var Shred = require('shred');
 var app = express();
 var rooms = {};
 var counter = 0;
@@ -68,6 +70,28 @@ app.post("/rooms/:room/signalling", function(req, res) {
     res.send(200);
 });
 
+app.get('/etherpad/:id', function(req, res) {
+    var id = req.param('id');
+    var shred = new Shred();
+    var request = shred.get({
+      url: config.etherpad.url + '/api/1/getRevisionsCount?padID=' + id + '&apikey=' + config.etherpad.api_key,
+      headers: {
+        Accept: "application/json"
+      },
+      on: {
+        200: function(response) {
+          objResp = response.content.data;
+          objResp.base_url = config.etherpad.url;
+          res.send(objResp);
+        },
+        response: function(response) {
+          console.log("Etherepad request for status failed");
+        }
+      }
+    });
+});
+
 app.listen(6424);
 console.log('Listening on port 6424');
+console.log('Etherpad conf: ' + config.etherpad.url + ' using ' + config.etherpad.api_key);
 

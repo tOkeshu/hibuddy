@@ -127,5 +127,33 @@ document.addEventListener('DOMContentLoaded', function() {
     function fullscren() { this.parentNode.mozRequestFullScreen(); }
     document.getElementById('local-video').addEventListener('click', fullscren);
     document.getElementById('remote-video').addEventListener('click', fullscren);
+
+    //Etherpad
+    function add_etherpad() {
+        etherpad_url = etherpadStatusParsed.base_url + '/p/' + room + '?showControls=false&showChat=false&showLineNumbers=true&useMonospaceFont=false';
+        document.getElementById('etherpad').innerHTML = '<iframe id="etherpad-iframe" src="' + etherpad_url + '">';
+    }
+
+    function check_etherpad() {
+        var etherpadStatus = new XMLHttpRequest();
+        etherpadStatus.open("GET", '/etherpad/' + room, true);
+        etherpadStatus.onreadystatechange = function() {
+            if (etherpadStatus.readyState == 4) {
+                if (etherpadStatus.status == 200) {
+                    console.log(etherpadStatus.responseText);
+                    etherpadStatusParsed = JSON.parse(etherpadStatus.responseText);
+                    if (etherpadStatusParsed.code == 0) {
+                        add_etherpad();
+                    }
+                }
+            }
+        };
+        etherpadStatus.send(null);
+    }
+
+    document.getElementById('create_etherpad').addEventListener('click', add_etherpad);
+
+    check_etherpad();
+
 });
 
