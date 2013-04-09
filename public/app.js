@@ -39,7 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             promise.resolve();
         }, function(err) {
-            promise.reject(err);
+            // We allow people to NOT share their camera
+            if (err == 'PERMISSION_DENIED')
+                promise.resolve();
+            else
+                promise.reject(err);
         });
 
         return promise
@@ -84,10 +88,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }, function() {});
     });
 
-    getVideo().then(getAudio).then(function() {
+    var error = function(err) {
+        var message;
+
+        if (err == 'PERMISSION_DENIED')
+            message = 'You need to give access to at least audio to make a call';
+        if (err == 'WEBRTC_NOT_SUPPORTED')
+            message = 'Your browser do not support WebRTC';
+        document.querySelector('.alert-error').textContent = 'toto';
+    };
+
+    getVideo().then(getAudio, error).then(function() {
         waitFriend();
         waitOffer();
-    });
+    }, error);
 
     source.addEventListener("uid", function(event) {
         event = JSON.parse(event.data);

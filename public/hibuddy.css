@@ -80,5 +80,8 @@ video {
     height: 100%;
     padding: 0 auto;
     border: 1px solid #999999;
+
+.hide {
+    display: none;
 }
 
