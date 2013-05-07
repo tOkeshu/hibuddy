@@ -1,25 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var peerConnection = new mozRTCPeerConnection();
+    var peerConnection;
     var room           = window.location.pathname.split('/')[2];
     var source         = new EventSource("/rooms/" + room + "/signalling");
     var me;
 
-    peerConnection.onaddstream = function(obj) {
-        var remoteVideo = document.getElementById('remote-video');
-        var remoteAudio = document.getElementById('remote-audio');
-        console.log(obj);
+    var error = function(err) {
+        var message;
+        var banner = document.querySelector('.alert-error');
 
-        var type = obj.type;
-        if (type == "video") {
-            remoteVideo.mozSrcObject = obj.stream;
-            remoteVideo.play();
-        } else if (type == "audio") {
-            remoteAudio.mozSrcObject = obj.stream;
-            remoteAudio.play();
-        } else {
-            console.log("sender onaddstream of unknown type, obj = " + obj.toSource());
-        }
+        if (err == 'PERMISSION_DENIED')
+            message = 'You need to at least give access to audio.';
+        else if (err == 'WEBRTC_NOT_SUPPORTED')
+            message = 'Your browser does not support WebRTC. ' +
+                      'Try with <a href="http://nightly.mozilla.org/">' +
+                      'Firefox Nightly</a>.';
+        else
+            message = 'An error occured : ' + err;
+        banner.innerHTML = message;
+        banner.classList.remove('hide');
     };
+
+    try {
+        peerConnection = new mozRTCPeerConnection();
+        peerConnection.onaddstream = function(obj) {
+            var remoteVideo = document.getElementById('remote-video');
+            var remoteAudio = document.getElementById('remote-audio');
+            console.log(obj);
+
+            var type = obj.type;
+            if (type == "video") {
+                remoteVideo.mozSrcObject = obj.stream;
+                remoteVideo.play();
+            } else if (type == "audio") {
+                remoteAudio.mozSrcObject = obj.stream;
+                remoteAudio.play();
+            } else {
+                console.log("sender onaddstream of unknown type, obj = " + obj.toSource());
+            }
+        };
+    } catch (err) {
+        error('WEBRTC_NOT_SUPPORTED');
+        return;
+    }
 
     var post = function(data) {
         var xhr = new XMLHttpRequest();
@@ -87,16 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, function() {});
     });
-
-    var error = function(err) {
-        var message;
-
-        if (err == 'PERMISSION_DENIED')
-            message = 'You need to give access to at least audio to make a call';
-        if (err == 'WEBRTC_NOT_SUPPORTED')
-            message = 'Your browser do not support WebRTC';
-        document.querySelector('.alert-error').textContent = 'toto';
-    };
 
     getVideo().then(getAudio, error).then(function() {
         waitFriend();
