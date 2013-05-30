@@ -31,6 +31,7 @@ app.get('/rooms/:room', function(req, res) {
 app.get("/rooms/:room/signalling", function(req, res) {
     var room = req.param('room');
     var users = rooms[room];
+    var timer;
     console.log('new friend');
 
     res.writeHead(200, {
@@ -42,11 +43,18 @@ app.get("/rooms/:room/signalling", function(req, res) {
     req.on("close", function() {
         var i = rooms[room].indexOf(res);
         rooms[room].splice(i, 1);
+        clearInterval(timer);
     });
 
     var event = JSON.stringify({type: 'uid', uid: counter++});
     res.write("event: uid\n");
     res.write("data: " + event + "\n\n");
+
+    // we send a ping comment every n seconds to keep the connection
+    // alive.
+    timer = setInterval(function() {
+        res.write(":p\n\n");
+    }, 20000);
 
     users.map(function(c) {
         c.write("event: newfriend\n");
