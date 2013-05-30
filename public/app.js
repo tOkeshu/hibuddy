@@ -6,19 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     peerConnection.onaddstream = function(obj) {
         var remoteVideo = document.getElementById('remote-video');
-        var remoteAudio = document.getElementById('remote-audio');
         console.log(obj);
 
-        var type = obj.type;
-        if (type == "video") {
-            remoteVideo.mozSrcObject = obj.stream;
-            remoteVideo.play();
-        } else if (type == "audio") {
-            remoteAudio.mozSrcObject = obj.stream;
-            remoteAudio.play();
-        } else {
-            console.log("sender onaddstream of unknown type, obj = " + obj.toSource());
-        }
+        // XXX should differenciate between video and audio
+        // seems to be a regression in the API
+        remoteVideo.mozSrcObject = obj.stream;
+        remoteVideo.play();
     };
 
     var post = function(data) {
@@ -106,7 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.from === me)
             return;
 
-        peerConnection.setRemoteDescription(event.offer, function() {
+        var offer = new mozRTCSessionDescription(event.offer);
+        peerConnection.setRemoteDescription(offer, function() {
             sendAnswer();
         });
     });
@@ -118,7 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.from === me)
             return;
 
-        peerConnection.setRemoteDescription(event.answer, function() {
+        var answer = new mozRTCSessionDescription(event.answer);
+        peerConnection.setRemoteDescription(answer, function() {
             console.log('done');
         });
     });
