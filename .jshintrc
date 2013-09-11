@@ -1,0 +1,12 @@
+{
+  "indent"    : 2,
+  "maxlen"    : 80,    // {int} Max number of characters per line
+  "trailing"  : false, // true: Prohibit trailing whitespaces
+  // "camelcase" : true,
+  "eqeqeq"    : true,  // true: Require triple equals (===) for comparison
+  "undef"     : true,  // true: Require all non-global variables to be declared (prevents global leaks)
+  "unused"    : true,  // true: Require all defined variables be used
+  "latedef"   : true,  // true: Require variables to be defined before use (helps avoid hoisting bugs)
+  "browser"   : true,  // Web Browser (window, document, etc)
+  "node"      : true   // Node.js
+}
