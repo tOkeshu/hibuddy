@@ -7,6 +7,7 @@ var rooms = {};
 var counter = 0;
 
 app.use(express.bodyParser());
+app.use('/static/lib', express.static(__dirname + '/bower_components'));
 app.use('/static', express.static(__dirname + '/public'));
 
 app.get("/", function(req, res) {
