@@ -21,25 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.send(JSON.stringify(data));
     };
 
-    var getVideo = function() {
-        var promise = new RSVP.Promise();
+    var getVideo = new RSVP.Promise(function(resolve, reject) {
         var localVideo = document.getElementById('local-video');
 
         navigator.mozGetUserMedia({video: true}, function(stream) {
-            localVideo.mozSrcObject = stream;
-            localVideo.play();
-            peerConnection.addStream(stream);
+          localVideo.mozSrcObject = stream;
+          localVideo.play();
+          peerConnection.addStream(stream);
 
-            promise.resolve();
+          resolve();
         }, function(err) {
-            promise.reject(err);
+          reject(err);
         });
+    });
 
-        return promise
-    }
-
-    var getAudio = function() {
-        var promise = new RSVP.Promise();
+    var getAudio = new RSVP.Promise(function(resolve, reject) {
         var localAudio = document.getElementById('local-audio');
 
         navigator.mozGetUserMedia({audio: true}, function(stream) {
@@ -47,13 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
             localAudio.play();
             peerConnection.addStream(stream);
 
-            promise.resolve();
+            resolve();
         }, function(err) {
-            promise.reject(err);
+            reject(err);
         });
 
-        return promise
-    };
+    });
 
     var sendOffer, waitFriend;
     sendOffer = waitFriend = _.after(2, function() {
@@ -77,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, function() {});
     });
 
-    getVideo().then(getAudio).then(function() {
+    getVideo.then(getAudio).then(function() {
         waitFriend();
         waitOffer();
     });
