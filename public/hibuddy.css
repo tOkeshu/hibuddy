@@ -73,6 +73,7 @@ video {
 #etherpad {
     text-align: center;
     margin-top: 40px;
+    display: none;
 }
 
 #etherpad-iframe {
@@ -80,5 +81,9 @@ video {
     height: 100%;
     padding: 0 auto;
     border: 1px solid #999999;
+}
+
+textarea {
+    width: 98%;
 }
 

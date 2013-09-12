@@ -1,11 +1,11 @@
-/* globals EventSource, RSVP, _ ,
+/* globals EventSource, RSVP, _ , ScratchArea,
    mozRTCSessionDescription, mozRTCPeerConnection
  */
 document.addEventListener('DOMContentLoaded', function() {
-  var peerConnection = new mozRTCPeerConnection();
+  var peerConnection = new mozRTCPeerConnection(), dataChannel;
   var room           = window.location.pathname.split('/')[2];
   var source         = new EventSource("/rooms/" + room + "/signalling");
-  var me;
+  var me, scratcharea;
   var etherpadStatusParsed;
 
   peerConnection.onaddstream = function(obj) {
@@ -152,6 +152,34 @@ document.addEventListener('DOMContentLoaded', function() {
     .addEventListener('click', add_etherpad);
 
   check_etherpad();
+
+  dataChannel = peerConnection.createDataChannel('dc', {
+    id: 0,
+    negotiated: true,
+    // Stream and preset parameters enable backwards compatibility
+    // from Firefox 24 until bug 892441 is fixed.
+    stream: 0,
+    preset: true
+  });
+
+  scratcharea = new ScratchArea({
+    node: document.querySelector("textarea"),
+    transport: dataChannel
+  });
+
+  dataChannel.onopen = function() {
+    scratcharea.node.removeAttribute("disabled");
+    scratcharea.monitor();
+  };
+  dataChannel.onerror = function(e) {
+    scratcharea.node.removeAttribute("disabled");
+    scratcharea.monitor().stop();
+    console.error("DataChanneld Error: " + e);
+  };
+  dataChannel.onclose = function() {
+    scratcharea.node.setAttribute("disabled", "disabled");
+    scratcharea.monitor().stop();
+  };
 
 });
 
