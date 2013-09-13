@@ -25,34 +25,19 @@ document.addEventListener('DOMContentLoaded', function() {
     xhr.send(JSON.stringify(data));
   };
 
-  var getVideo = new RSVP.Promise(function(resolve, reject) {
+  var getVideoAudio = function(callback) {
     var localVideo = document.getElementById('local-video');
 
-    navigator.mozGetUserMedia({video: true}, function(stream) {
+    navigator.mozGetUserMedia({video: true, audio: true}, function(stream) {
       localVideo.mozSrcObject = stream;
       localVideo.play();
       peerConnection.addStream(stream);
 
-      resolve();
+      callback();
     }, function(err) {
-      reject(err);
+      callback(err);
     });
-  });
-
-  var getAudio = new RSVP.Promise(function(resolve, reject) {
-    var localAudio = document.getElementById('local-audio');
-
-    navigator.mozGetUserMedia({audio: true}, function(stream) {
-      localAudio.mozSrcObject = stream;
-      localAudio.play();
-      peerConnection.addStream(stream);
-
-      resolve();
-    }, function(err) {
-      reject(err);
-    });
-
-  });
+  };
 
   var sendOffer, waitFriend;
   sendOffer = waitFriend = _.after(2, function() {
@@ -76,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, function() {});
   });
 
-  getVideo.then(getAudio).then(function() {
+  // XXX: handle errors
+  getVideoAudio(function() {
     waitFriend();
     waitOffer();
   });
