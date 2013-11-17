@@ -157,14 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
     scratcharea.node.removeAttribute("disabled");
     scratcharea.monitor();
   };
+
   dataChannel.onerror = function(e) {
     scratcharea.node.removeAttribute("disabled");
-    scratcharea.monitor().stop();
-    console.error("DataChanneld Error: " + e);
+    scratcharea.stop();
+    console.error("DataChannel Error: " + e);
   };
+
   dataChannel.onclose = function() {
     scratcharea.node.setAttribute("disabled", "disabled");
-    scratcharea.monitor().stop();
+    scratcharea.stop();
   };
 
 });
