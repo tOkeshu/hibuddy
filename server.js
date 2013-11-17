@@ -1,4 +1,3 @@
-var config = require('./config');
 var crypto  = require('crypto');
 var express = require('express');
 var Shred = require('shred');
