@@ -1,12 +1,11 @@
-/* globals EventSource, RSVP, _ ,
+/* globals EventSource, RSVP, _ , ScratchArea,
    mozRTCSessionDescription, mozRTCPeerConnection
  */
 document.addEventListener('DOMContentLoaded', function() {
-  var peerConnection = new mozRTCPeerConnection();
+  var peerConnection = new mozRTCPeerConnection(), dataChannel;
   var room           = window.location.pathname.split('/')[2];
   var source         = new EventSource("/rooms/" + room + "/signalling");
-  var me;
-  var etherpadStatusParsed;
+  var me, scratcharea;
 
   peerConnection.onaddstream = function(obj) {
     var remoteVideo = document.getElementById('remote-video');
@@ -25,34 +24,19 @@ document.addEventListener('DOMContentLoaded', function() {
     xhr.send(JSON.stringify(data));
   };
 
-  var getVideo = new RSVP.Promise(function(resolve, reject) {
+  var getVideoAudio = function(callback) {
     var localVideo = document.getElementById('local-video');
 
-    navigator.mozGetUserMedia({video: true}, function(stream) {
+    navigator.mozGetUserMedia({video: true, audio: true}, function(stream) {
       localVideo.mozSrcObject = stream;
       localVideo.play();
       peerConnection.addStream(stream);
 
-      resolve();
+      callback();
     }, function(err) {
-      reject(err);
+      callback(err);
     });
-  });
-
-  var getAudio = new RSVP.Promise(function(resolve, reject) {
-    var localAudio = document.getElementById('local-audio');
-
-    navigator.mozGetUserMedia({audio: true}, function(stream) {
-      localAudio.mozSrcObject = stream;
-      localAudio.play();
-      peerConnection.addStream(stream);
-
-      resolve();
-    }, function(err) {
-      reject(err);
-    });
-
-  });
+  };
 
   var sendOffer, waitFriend;
   sendOffer = waitFriend = _.after(2, function() {
@@ -76,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, function() {});
   });
 
-  getVideo.then(getAudio).then(function() {
+  // XXX: handle errors
+  getVideoAudio(function() {
     waitFriend();
     waitOffer();
   });
@@ -122,36 +107,35 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('local-video').addEventListener('click', fullscren);
   document.getElementById('remote-video').addEventListener('click', fullscren);
 
-  //Etherpad
-  function add_etherpad() {
-    var qs = '?showControls=false&showChat=false&showLineNumbers=true' +
-      '&useMonospaceFont=false';
-    var etherpad_url = etherpadStatusParsed.base_url + '/p/' + room + qs;
-    document.getElementById('etherpad').innerHTML =
-      '<iframe id="etherpad-iframe" src="' + etherpad_url + '">';
-  }
+  dataChannel = peerConnection.createDataChannel('dc', {
+    id: 0,
+    negotiated: true,
+    // Stream and preset parameters enable backwards compatibility
+    // from Firefox 24 until bug 892441 is fixed.
+    stream: 0,
+    preset: true
+  });
 
-  function check_etherpad() {
-    var etherpadStatus = new XMLHttpRequest();
-    etherpadStatus.open("GET", '/etherpad/' + room, true);
-    etherpadStatus.onreadystatechange = function() {
-      if (etherpadStatus.readyState === 4) {
-        if (etherpadStatus.status === 200) {
-          console.log(etherpadStatus.responseText);
-          etherpadStatusParsed = JSON.parse(etherpadStatus.responseText);
-          if (etherpadStatusParsed.code === 0) {
-            add_etherpad();
-          }
-        }
-      }
-    };
-    etherpadStatus.send(null);
-  }
+  scratcharea = new ScratchArea({
+    node: document.querySelector("textarea"),
+    transport: dataChannel
+  });
 
-  document.getElementById('create_etherpad')
-    .addEventListener('click', add_etherpad);
+  dataChannel.onopen = function() {
+    scratcharea.node.removeAttribute("disabled");
+    scratcharea.monitor();
+  };
 
-  check_etherpad();
+  dataChannel.onerror = function(e) {
+    scratcharea.node.removeAttribute("disabled");
+    scratcharea.stop();
+    console.error("DataChannel Error: " + e);
+  };
+
+  dataChannel.onclose = function() {
+    scratcharea.node.setAttribute("disabled", "disabled");
+    scratcharea.stop();
+  };
 
 });
 
