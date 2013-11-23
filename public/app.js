@@ -17,6 +17,22 @@ document.addEventListener('DOMContentLoaded', function() {
     remoteVideo.play();
   };
 
+  peerConnection.oniceconnectionstatechange = function() {
+    // TODO: display an error if the ice connection failed
+    console.log("ice: " + peerConnection.iceConnectionState);
+  };
+
+  peerConnection.onicecandidate = function(event) {
+    if (event.candidate) {
+      var candidate = {
+        candidate: event.candidate.candidate,
+        sdpMid: event.candidate.sdpMid,
+        sdpMLineIndex: event.candidate.sdpMLineIndex
+      };
+      post({type: 'iceCandidate', from: me, candidate: candidate});
+    }
+  };
+
   var post = function(data) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/rooms/' + room + '/signalling', true);
@@ -101,6 +117,16 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('done');
     });
   });
+
+  source.addEventListener("iceCandidate", function(event) {
+    event = JSON.parse(event.data);
+
+    if (event.from === me)
+      return;
+
+    peerConnection.addIceCandidate(new mozRTCIceCandidate(event.candidate));
+  });
+
 
   // Fullscreen
   function fullscren() { this.parentNode.mozRequestFullScreen(); }
