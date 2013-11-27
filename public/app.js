@@ -2,7 +2,15 @@
    mozRTCSessionDescription, mozRTCPeerConnection
  */
 document.addEventListener('DOMContentLoaded', function() {
-  var peerConnection = new mozRTCPeerConnection(), dataChannel;
+  var config = {
+    iceServers: [{
+      // please contact me if you plan to use this server
+      url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+      credential: 'hibuddy',
+      username: 'hibuddy'
+    }]
+  };
+  var peerConnection = new mozRTCPeerConnection(config), dataChannel;
   var room           = window.location.pathname.split('/')[2];
   var source         = new EventSource("/rooms/" + room + "/signalling");
   var me, scratcharea;
