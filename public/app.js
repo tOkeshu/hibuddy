@@ -1,7 +1,22 @@
 /* globals EventSource, RSVP, _ , ScratchArea,
    mozRTCSessionDescription, mozRTCPeerConnection
  */
+
+function notify(message, type) {
+  var alert = document.querySelector(".alert");
+  alert.innerHTML = message;
+  if (type)
+    alert.classList.add("alert-" + type);
+  alert.classList.remove("hidden");
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  if (window.mozRTCPeerConnection === undefined ||
+      navigator.mozGetUserMedia === undefined)
+    notify("This application only works with Firefox 25 or later. " +
+           "Please consider <a href=\"https://github.com/tOkeshu/hibuddy\">" +
+           "contributing to hibbudy</a> if you want Chrome support :)");
+
   var config = {
     iceServers: [{
       // please contact me if you plan to use this server
@@ -19,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var remoteVideo = document.getElementById('remote-video');
     console.log(obj);
 
-    // XXX should differenciate between video and audio
-    // seems to be a regression in the API
     remoteVideo.mozSrcObject = obj.stream;
     remoteVideo.play();
   };
@@ -28,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
   peerConnection.oniceconnectionstatechange = function() {
     // TODO: display an error if the ice connection failed
     console.log("ice: " + peerConnection.iceConnectionState);
+    if (peerConnection.iceConnectionState === "failed")
+      notify("Something went wrong: the connection failed", "error");
   };
 
   peerConnection.onicecandidate = function(event) {
@@ -85,7 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // XXX: handle errors
-  getVideoAudio(function() {
+  getVideoAudio(function(err) {
+    if (err)
+      notify("Something went wrong: " + err, "error");
+
     waitFriend();
     waitOffer();
   });
