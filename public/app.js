@@ -1,6 +1,14 @@
 /* globals EventSource, RSVP, _ , ScratchArea,
    mozRTCSessionDescription, mozRTCPeerConnection
  */
+
+function notify(type, message) {
+  var alert = document.querySelector(".alert");
+  alert.textContent = message;
+  alert.classList.add("alert-" + type);
+  alert.classList.remove("hidden");
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   var config = {
     iceServers: [{
@@ -19,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var remoteVideo = document.getElementById('remote-video');
     console.log(obj);
 
-    // XXX should differenciate between video and audio
-    // seems to be a regression in the API
     remoteVideo.mozSrcObject = obj.stream;
     remoteVideo.play();
   };
@@ -28,6 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
   peerConnection.oniceconnectionstatechange = function() {
     // TODO: display an error if the ice connection failed
     console.log("ice: " + peerConnection.iceConnectionState);
+    if (peerConnection.iceConnectionState === "failed")
+      notify("error", "Something went wrong: the connection failed");
   };
 
   peerConnection.onicecandidate = function(event) {
@@ -85,7 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // XXX: handle errors
-  getVideoAudio(function() {
+  getVideoAudio(function(err) {
+    if (err)
+      notify("error", "Something went wrong: " + err);
+
     waitFriend();
     waitOffer();
   });
