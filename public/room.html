@@ -5,52 +5,25 @@
     <title>Hi Buddy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="/static/lib/bootstrap.css" rel="stylesheet">
-    <link href="/static/lib/bootstrap-responsive.css" rel="stylesheet">
     <link href="/static/hibuddy.css" rel="stylesheet">
-
-    <script type="text/javascript" src="/static/lib/underscore/underscore.js"></script>
-    <script type="text/javascript" src="/static/lib/rsvp/rsvp.js"></script>
-
   </head>
 
   <body>
 
-    <div class="container-narrow">
 
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li><a href="/">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="muted">Hi Buddy!</h3>
-
+    <article class="connecting">
+      <div class="message">
+        <p id="error" class="hidden"></p>
       </div>
+    </article>
 
-      <hr>
+    <video id="local-video" muted></video>
+    <video id="remote-video" class="hidden"></video>
 
-      <div class="alert hidden"></div>
-
-      <article>
-        <video id="local-video" muted></video>
-        <video id="remote-video"></video>
-      </article>
-
-      <hr>
-
-      <textarea rows="10" disabled="disabled"></textarea>
-
-      <footer>
-        <p>Code by <a href="http://monkeypatch.me/~tOkeshu">@tOkeshu</a>, design and css with the help of <a href="http://getbootstrap.com/">twitter bootstrap</a>.</p>
-      </footer>
-
-    </div>
+    <script type="text/javascript" src="/static/lib/microevent/microevent.js"></script>
+    <script type="text/javascript" src="/static/hibuddy_app.js"></script>
+    <script type="text/javascript" src="/static/app.js"></script>
   </body>
-
-  <script type="text/javascript" src="/static/lib/ot/ot.js"></script>
-  <script type="text/javascript" src="/static/lib/scratchpad/scratchpad.js"></script>
-  <script type="text/javascript" src="/static/app.js"></script>
 
 </html>
 
