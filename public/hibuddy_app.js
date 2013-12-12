@@ -30,6 +30,7 @@ HiBuddyApp.prototype = {
     var peerConnection = new mozRTCPeerConnection(this.config);
     this.peerConnection = this._setupPeerConnection(peerConnection);
     this._sendOffer();
+    this.trigger("newbuddy");
   },
 
   _onOffer: function(event) {
@@ -75,10 +76,11 @@ HiBuddyApp.prototype = {
     console.log("ice: " + this.peerConnection.iceConnectionState);
     if (this.peerConnection.iceConnectionState === "failed") {
       console.error("Something went wrong: the connection failed");
+      this.trigger("failure");
     }
 
     if (this.peerConnection.iceConnectionState === "connected")
-      console.log("connected");
+      this.trigger("connected");
   },
 
   _onNewIceCandidate: function(event) {
@@ -132,4 +134,7 @@ HiBuddyApp.prototype = {
   }
 
 };
+
+MicroEvent.mixin(HiBuddyApp);
+HiBuddyApp.prototype.on = HiBuddyApp.prototype.bind;
 
