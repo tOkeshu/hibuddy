@@ -37,9 +37,6 @@ HiBuddyApp.prototype = {
     var message = JSON.parse(event.data);
     var peerConnection = new mozRTCPeerConnection(this.config);
 
-    if (message.from === this.me)
-      return;
-
     this.peerConnection = this._setupPeerConnection(peerConnection);
 
     var offer = new mozRTCSessionDescription(message.offer);
@@ -52,9 +49,6 @@ HiBuddyApp.prototype = {
     var message = JSON.parse(event.data);
     console.log(message.answer);
 
-    if (message.from === this.me)
-      return;
-
     var answer = new mozRTCSessionDescription(message.answer);
     this.peerConnection.setRemoteDescription(answer, function() {
       console.log("done");
@@ -63,9 +57,6 @@ HiBuddyApp.prototype = {
 
   _onIceCandidate: function(event) {
     var message = JSON.parse(event.data);
-
-    if (message.from === this.me)
-      return;
 
     var candidate = new mozRTCIceCandidate(message.candidate);
     this.peerConnection.addIceCandidate(candidate);
