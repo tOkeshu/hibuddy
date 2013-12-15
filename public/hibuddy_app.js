@@ -14,7 +14,7 @@ HiBuddyApp.prototype = {
     this.source = new EventSource("/rooms/" + this.room + "/signalling");
     this.source.on = this.source.addEventListener.bind(this.source);
     this.source.on("uid",          this._onUID.bind(this));
-    this.source.on("newfriend",    this._onNewBuddy.bind(this));
+    this.source.on("newbuddy",     this._onNewBuddy.bind(this));
     this.source.on("offer",        this._onOffer.bind(this));
     this.source.on("answer",       this._onAnswer.bind(this));
     this.source.on("icecandidate", this._onIceCandidate.bind(this));

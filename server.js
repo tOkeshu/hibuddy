@@ -57,7 +57,7 @@ app.get("/rooms/:room/signalling", function(req, res) {
   }, 20000);
 
   users.forEach(function(user) {
-    user.stream.write("event: newfriend\n");
+    user.stream.write("event: newbuddy\n");
     user.stream.write("data: {}\n\n");
   });
   users.push({uid: uid, stream: res});
