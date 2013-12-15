@@ -5,44 +5,24 @@
     <title>Hi Buddy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="/static/lib/bootstrap.css" rel="stylesheet">
-    <link href="/static/lib/bootstrap-responsive.css" rel="stylesheet">
     <link href="/static/hibuddy.css" rel="stylesheet">
 
-    <script type="text/javascript" src="/static/404.js"></script>
   </head>
 
   <body>
 
-    <div class="container-narrow">
-
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li><a href="/">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="muted">Hi Buddy!</h3>
-
-      </div>
-
-      <hr>
-
-      <div class="propaganda">
-        <h1>This room does not exists!</h1>
+    <article class="landing">
+      <header>
+        <h1>Oops, this room does not exists!</h1>
         <p class="lead">To create a room at this url, click the following button:</p>
         <form method="POST" action="/rooms">
           <input type="hidden" name="room" value=""/>
-          <input type="submit" value="Create the room" class="btn btn-large btn-success"/>
+          <input type="submit" value="Create the room" class="button"/>
         </form>
+      </header>
+    </article>
 
-      </div>
-
-      <footer>
-        <p>Code by <a href="http://monkeypatch.me/~tOkeshu">@tOkeshu</a>, design and css with the help of <a href="http://getbootstrap.com/">twitter bootstrap<a/>.</p>
-      </footer>
-
-    </div>
+    <script type="text/javascript" src="/static/404.js"></script>
   </body>
 
 </html>
