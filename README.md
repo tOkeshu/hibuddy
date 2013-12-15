@@ -14,16 +14,9 @@ videoconferences with your friends.
 
 ### Requirements
 
-  - Firefox with WebRTC enabled
+  - Firefox 25 (or later)
   - `node 0.8.x`
   - `npm 1.1.x`
-
-To use your webcam you will need
-[Firefox nightly](http://nightly.mozilla.org/) with the following
-flags enabled via `about:config`:
-
-    media.navigator.enabled: true
-    media.peerconnection.enabled: true
 
 ### Install the project
 
@@ -83,12 +76,6 @@ For a more concrete deployment, we recommand you to use `forever`:
 
 See the [forever documentation](https://github.com/nodejitsu/forever)
 for more information.
-
-## Bugs/Pitfalls
-
-  * For now, because of the lack of full NAT traversal ability in the
-    current Firefox Nightly build (2012-11-13), **it only works if
-    people are in the same network than the application**.
 
 ## License
 
