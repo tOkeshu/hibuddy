@@ -15,13 +15,16 @@
 
     </a>
 
-    <article>
+    <article class="landing">
       <header>
         <h1>Damn simple video chats for the Web!</h1>
         <p>HiBuddy is a damn simple web application to make video
         chats with your friends. Create a room, give the url to
         someone else and say hi!</p>
-        <a href="#" class="button">Create a room</a>
+        <form method="POST" action="/rooms">
+          <input type="hidden" name="room" value=""/>
+          <input type="submit" value="Create a room" class="button"/>
+        </form>
       </header>
     </article>
   </body>
