@@ -1,6 +1,5 @@
 var crypto  = require('crypto');
 var express = require('express');
-var Shred = require('shred');
 var app = express();
 var rooms = {};
 var counter = 0;
@@ -31,6 +30,7 @@ app.get('/rooms/:room', function(req, res) {
 app.get("/rooms/:room/signalling", function(req, res) {
   var room = req.param('room');
   var users = rooms[room];
+  var uid = crypto.randomBytes(16).toString('hex');
   var timer;
   console.log('new friend');
 
@@ -41,12 +41,14 @@ app.get("/rooms/:room/signalling", function(req, res) {
   });
 
   req.on("close", function() {
-    var i = rooms[room].indexOf(res);
-    rooms[room].splice(i, 1);
+    var users = rooms[room];
+    rooms[room] = users.filter(function(user) {
+      return user.connection !== res;
+    });
     clearInterval(timer);
   });
 
-  var event = JSON.stringify({type: 'uid', uid: counter++});
+  var event = JSON.stringify({type: 'uid', uid: uid});
   res.write("event: uid\n");
   res.write("data: " + event + "\n\n");
 
@@ -56,11 +58,11 @@ app.get("/rooms/:room/signalling", function(req, res) {
     res.write(":p\n\n");
   }, 20000);
 
-  users.map(function(c) {
-    c.write("event: newfriend\n");
-    c.write("data: {}\n\n");
+  users.forEach(function(user) {
+    user.stream.write("event: newbuddy\n");
+    user.stream.write("data: {}\n\n");
   });
-  users.push(res);
+  users.push({uid: uid, stream: res});
 });
 
 app.post("/rooms/:room/signalling", function(req, res) {
@@ -70,9 +72,12 @@ app.post("/rooms/:room/signalling", function(req, res) {
   var event = JSON.stringify(req.body);
   console.log(req.body);
 
-  users.map(function(c) {
-    c.write("event: " + type + "\n");
-    c.write("data: " + event + "\n\n");
+  users.forEach(function(user) {
+    if (user.uid === req.body.from)
+      return;
+
+    user.stream.write("event: " + type + "\n");
+    user.stream.write("data: " + event + "\n\n");
   });
 
   res.send(200);

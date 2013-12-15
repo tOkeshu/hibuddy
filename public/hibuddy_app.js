@@ -1,5 +1,5 @@
-/* globals */
-
+/* globals EventSource, MicroEvent,
+   mozRTCPeerConnection, mozRTCSessionDescription, mozRTCIceCandidate */
 
 function HiBuddyApp(room) {
   this.room = room;
@@ -14,7 +14,7 @@ HiBuddyApp.prototype = {
     this.source = new EventSource("/rooms/" + this.room + "/signalling");
     this.source.on = this.source.addEventListener.bind(this.source);
     this.source.on("uid",          this._onUID.bind(this));
-    this.source.on("newfriend",    this._onNewBuddy.bind(this));
+    this.source.on("newbuddy",     this._onNewBuddy.bind(this));
     this.source.on("offer",        this._onOffer.bind(this));
     this.source.on("answer",       this._onAnswer.bind(this));
     this.source.on("icecandidate", this._onIceCandidate.bind(this));
@@ -37,9 +37,6 @@ HiBuddyApp.prototype = {
     var message = JSON.parse(event.data);
     var peerConnection = new mozRTCPeerConnection(this.config);
 
-    if (message.from === this.me)
-      return;
-
     this.peerConnection = this._setupPeerConnection(peerConnection);
 
     var offer = new mozRTCSessionDescription(message.offer);
@@ -52,9 +49,6 @@ HiBuddyApp.prototype = {
     var message = JSON.parse(event.data);
     console.log(message.answer);
 
-    if (message.from === this.me)
-      return;
-
     var answer = new mozRTCSessionDescription(message.answer);
     this.peerConnection.setRemoteDescription(answer, function() {
       console.log("done");
@@ -64,14 +58,11 @@ HiBuddyApp.prototype = {
   _onIceCandidate: function(event) {
     var message = JSON.parse(event.data);
 
-    if (message.from === this.me)
-      return;
-
     var candidate = new mozRTCIceCandidate(message.candidate);
     this.peerConnection.addIceCandidate(candidate);
   },
 
-  _onIceStateChange: function(event) {
+  _onIceStateChange: function() {
     // XXX: display an error if the ice connection failed
     console.log("ice: " + this.peerConnection.iceConnectionState);
     if (this.peerConnection.iceConnectionState === "failed") {
