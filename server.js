@@ -1,6 +1,5 @@
 var crypto  = require('crypto');
 var express = require('express');
-var Shred = require('shred');
 var app = express();
 var rooms = {};
 var counter = 0;
