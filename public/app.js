@@ -1,3 +1,5 @@
+/* globals HiBuddyApp */
+
 (function() {
   var room = window.location.pathname.split('/')[2];
   var hibuddy = new HiBuddyApp(room);
@@ -42,7 +44,7 @@
 
     display(shareUrl);
   }, function(err) {
-    console.error("getUserMedia Failed");
+    console.error("getUserMedia Failed: " + err);
   });
 
 }());

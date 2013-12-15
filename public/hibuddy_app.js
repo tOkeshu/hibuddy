@@ -1,5 +1,5 @@
-/* globals */
-
+/* globals EventSource, MicroEvent,
+   mozRTCPeerConnection, mozRTCSessionDescription, mozRTCIceCandidate */
 
 function HiBuddyApp(room) {
   this.room = room;
@@ -62,7 +62,7 @@ HiBuddyApp.prototype = {
     this.peerConnection.addIceCandidate(candidate);
   },
 
-  _onIceStateChange: function(event) {
+  _onIceStateChange: function() {
     // XXX: display an error if the ice connection failed
     console.log("ice: " + this.peerConnection.iceConnectionState);
     if (this.peerConnection.iceConnectionState === "failed") {
