@@ -41,8 +41,10 @@ app.get("/rooms/:room/signalling", function(req, res) {
   });
 
   req.on("close", function() {
-    var i = rooms[room].indexOf(res);
-    rooms[room].splice(i, 1);
+    var users = rooms[room];
+    rooms[room] = users.filter(function(user) {
+      return user.connection !== res;
+    });
     clearInterval(timer);
   });
 
