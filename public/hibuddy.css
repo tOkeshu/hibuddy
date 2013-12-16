@@ -13,6 +13,28 @@ a {
     text-decoration: none;
 }
 
+nav {
+    position: absolute;
+    top: calc(50% - 250px / 2);
+    left: 5px;
+    width: auto;
+    background-color: #191919;
+    border-radius: 5px;
+    z-index: 4;
+}
+
+nav ul {
+    padding: 0px 10px;
+}
+
+nav li {
+    list-style: none;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
 article.landing {
     position: absolute;
     width: 100%;
