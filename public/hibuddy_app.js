@@ -10,6 +10,14 @@ HiBuddyApp.prototype = {
   start: function(stream, callback) {
     this.stream = stream;
     this.onRemoteStream = callback;
+    this.config = {
+      iceServers: [{
+        // please contact me if you plan to use this server
+        url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+        credential: 'hibuddy',
+        username: 'hibuddy'
+      }]
+    };
 
     this.source = new EventSource("/rooms/" + this.room + "/signalling");
     this.source.on = this.source.addEventListener.bind(this.source);
