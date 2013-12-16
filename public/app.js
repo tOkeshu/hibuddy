@@ -3,6 +3,7 @@
 (function() {
   var room = window.location.pathname.split('/')[2];
   var hibuddy = new HiBuddyApp(room);
+  var toolbar;
 
   var localVideo  = document.getElementById('local-video');
   var remoteVideo = document.getElementById('remote-video');
@@ -34,6 +35,9 @@
   display(allowMedia);
 
   navigator.mozGetUserMedia({video: true, audio: true}, function(localStream) {
+    var el = document.querySelector("nav");
+    var toolbar = new HiBuddyToolbar(el, localStream);
+
     localVideo.mozSrcObject = localStream;
     localVideo.play();
 
