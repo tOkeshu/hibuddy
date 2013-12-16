@@ -13,6 +13,45 @@ a {
     text-decoration: none;
 }
 
+nav {
+    position: absolute;
+    top: calc(50% - 250px / 2);
+    left: 5px;
+    width: auto;
+    background-color: #191919;
+    border-radius: 5px;
+    z-index: 4;
+}
+
+nav ul {
+    padding: 0px 10px;
+}
+
+nav li {
+    list-style: none;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+nav .icon {
+    fill: #8c8887;
+    transition: fill 0.5s;
+}
+
+nav .icon:hover {
+    fill: #A6A1A0;
+    transition: fill 0.5s;
+}
+
+nav .enabled path.disable {
+    visibility: hidden;
+}
+nav .disabled path.enable {
+    visibility: hidden;
+}
+
 article.landing {
     position: absolute;
     width: 100%;
@@ -24,7 +63,6 @@ article.room {
     background-position: center 0px;
     background-repeat: no-repeat;
     background-size: auto 120%;
-    transition: background-image 1s;
 }
 
 article header {
@@ -57,18 +95,18 @@ article header p {
     color: #ECECEC;
     display: inline-block;
     cursor: pointer;
-    transition: background-color 1s, color 1s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .button:hover {
     background-color: #57BD70;
     color: #FFFFFF;
-    transition: background-color 1s, color 1s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 article .message {
     position: absolute;
-    top: calc(50% - 0.5em);
+    top: calc(50% - 2em);
     width: 100%;
     font-size: 40px;
     z-index: 2;
@@ -115,5 +153,4 @@ video#remote-video {
 .hidden {
     display: none;
 }
-
 
