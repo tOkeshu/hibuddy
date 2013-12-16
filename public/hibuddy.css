@@ -95,18 +95,18 @@ article header p {
     color: #ECECEC;
     display: inline-block;
     cursor: pointer;
-    transition: background-color 1s, color 1s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .button:hover {
     background-color: #57BD70;
     color: #FFFFFF;
-    transition: background-color 1s, color 1s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 article .message {
     position: absolute;
-    top: calc(50% - 0.5em);
+    top: calc(50% - 2em);
     width: 100%;
     font-size: 40px;
     z-index: 2;
@@ -153,5 +153,4 @@ video#remote-video {
 .hidden {
     display: none;
 }
-
 
