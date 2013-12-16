@@ -35,6 +35,23 @@ nav li {
     cursor: pointer;
 }
 
+nav .icon {
+    fill: #8c8887;
+    transition: fill 0.5s;
+}
+
+nav .icon:hover {
+    fill: #A6A1A0;
+    transition: fill 0.5s;
+}
+
+nav .enabled path.disable {
+    visibility: hidden;
+}
+nav .disabled path.enable {
+    visibility: hidden;
+}
+
 article.landing {
     position: absolute;
     width: 100%;
@@ -46,7 +63,6 @@ article.room {
     background-position: center 0px;
     background-repeat: no-repeat;
     background-size: auto 120%;
-    transition: background-image 1s;
 }
 
 article header {
