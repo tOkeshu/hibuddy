@@ -19,9 +19,6 @@
     "tests"
   ],
   "dependencies": {
-    "rsvp": "~2.0.1",
-    "underscore": "~1.5.2",
-    "ot": "git://github.com/tOkeshu/ot.js.git",
-    "scratchpad": "git://github.com/tOkeshu/scratchpad.git"
+    "microevent": "~1.1.1"
   }
 }

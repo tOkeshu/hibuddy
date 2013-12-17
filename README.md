@@ -23,6 +23,7 @@ videoconferences with your friends.
     $ git clone https://github.com/tOkeshu/hibuddy.git
     $ cd hibuddy
     $ npm install
+    $ ./node_modules/bower/bin/bower install
 
 These commands should clone and pull the necessary dependencies.
 
