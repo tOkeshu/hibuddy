@@ -9,7 +9,7 @@ app.use('/static/lib', express.static(__dirname + '/bower_components'));
 app.use('/static', express.static(__dirname + '/public'));
 
 app.get("/", function(req, res) {
-  res.sendfile(__dirname + '/public/index.html');
+  res.sendfile('/public/index.html', {root: __dirname});
 });
 
 app.post("/rooms", function(req, res) {
@@ -22,9 +22,9 @@ app.get('/rooms/:room', function(req, res) {
   var room  = req.param('room');
 
   if (room in rooms)
-    res.sendfile(__dirname + '/public/room.html');
+    res.sendfile('/public/room.html', {root: __dirname});
   else
-    res.status(404).sendfile(__dirname + '/public/404.html');
+    res.status(404).sendfile('/public/404.html', {root: __dirname});
 });
 
 app.get("/rooms/:room/signalling", function(req, res) {
