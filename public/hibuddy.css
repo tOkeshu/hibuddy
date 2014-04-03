@@ -139,6 +139,7 @@ article .message input {
 }
 
 video#local-video {
+    transform: scale(-1, 1);
     position: absolute;
     bottom: 5px;
     right: 5px;
