@@ -34,15 +34,15 @@
 
   display(allowMedia);
 
-  navigator.mozGetUserMedia({video: true, audio: true}, function(localStream) {
+  navigator.getUserMedia({video: true, audio: true}, function(localStream) {
     var el = document.querySelector("nav");
     var toolbar = new HiBuddyToolbar(el, localStream);
 
-    localVideo.mozSrcObject = localStream;
+    localVideo.src = URL.createObjectURL(localStream);
     localVideo.play();
 
     hibuddy.start(localStream, function(remoteStream) {
-      remoteVideo.mozSrcObject = remoteStream;
+      remoteVideo.src = URL.createObjectURL(remoteStream);
       remoteVideo.play();
     });
 
