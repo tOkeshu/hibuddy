@@ -1,5 +1,4 @@
-/* globals EventSource, MicroEvent,
-   mozRTCPeerConnection, mozRTCSessionDescription, mozRTCIceCandidate */
+/* globals EventSource, MicroEvent */
 
 function HiBuddyToolbar(el, stream) {
   this.el = el;
