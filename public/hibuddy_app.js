@@ -89,7 +89,7 @@ HiBuddyApp.prototype = {
         sdpMid: event.candidate.sdpMid,
         sdpMLineIndex: event.candidate.sdpMLineIndex
       };
-      this._post({type: 'iceCandidate', from: this.me, candidate: candidate});
+      this._post({type: 'icecandidate', from: this.me, candidate: candidate});
     }
   },
 
