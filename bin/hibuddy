@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var HibuddyServer = require("../server");
+var server = new HibuddyServer({root: "/api"});
+
+server.run();
+console.log("Listening on port 7665");

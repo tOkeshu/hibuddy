@@ -23,7 +23,6 @@ videoconferences with your friends.
     $ git clone https://github.com/tOkeshu/hibuddy.git
     $ cd hibuddy
     $ npm install
-    $ ./node_modules/bower/bin/bower install
 
 These commands should clone and pull the necessary dependencies.
 
@@ -56,7 +55,7 @@ Enable your site:
 ### Start the server
 
     $ cd hibuddy
-    $ node server.js # starts the server on port 6424
+    $ npm start # starts the server on port 6424
 
 Then open a browser to http://hibuddy.example.com (where `hibuddy.example.com` is your domain).
 
@@ -72,8 +71,8 @@ For a more concrete deployment, we recommand you to use `forever`:
 
     # npm install -g forever # install forever system wide
     $ cd hibuddy
-    $ forever -o logs/stdout.log -e logs/stderr.log start server.js
-    $ forever stop server.js
+    $ forever -o logs/stdout.log -e logs/stderr.log start bin/hibuddy
+    $ forever stop bin/hibuddy
 
 See the [forever documentation](https://github.com/nodejitsu/forever)
 for more information.
