@@ -2,8 +2,9 @@
    RTCPeerConnection, RTCSessionDescription, RTCIceCandidate */
 
 function HiBuddyApp(room) {
-  this.room = room;
-  this.me = undefined;
+  this.room  = room;
+  this.me    = undefined;
+  this.token = undefined;
 }
 
 HiBuddyApp.prototype = {
@@ -19,7 +20,7 @@ HiBuddyApp.prototype = {
       }]
     };
 
-    this.source = new EventSource("/rooms/" + this.room + "/signalling");
+    this.source = new EventSource("/api/rooms/" + this.room);
     this.source.on = this.source.addEventListener.bind(this.source);
     this.source.on("uid",          this._onUID.bind(this));
     this.source.on("newbuddy",     this._onNewBuddy.bind(this));
@@ -31,19 +32,28 @@ HiBuddyApp.prototype = {
   _onUID: function(event) {
     var message = JSON.parse(event.data);
     this.me = message.uid;
+    this.token = message.token;
+
     console.log('UID: ' + this.me);
+    console.log('TOKEN: ' + this.token);
+    this.trigger("connected", this.me);
   },
 
-  _onNewBuddy: function() {
+  _onNewBuddy: function(event) {
+    var message = JSON.parse(event.data);
     var peerConnection = new RTCPeerConnection(this.config);
+    this.peer = message.peer;
+
     this.peerConnection = this._setupPeerConnection(peerConnection);
     this._sendOffer();
+
     this.trigger("newbuddy");
   },
 
   _onOffer: function(event) {
     var message = JSON.parse(event.data);
     var peerConnection = new RTCPeerConnection(this.config);
+    this.peer = message.peer;
 
     this.peerConnection = this._setupPeerConnection(peerConnection);
 
@@ -84,12 +94,11 @@ HiBuddyApp.prototype = {
 
   _onNewIceCandidate: function(event) {
     if (event.candidate) {
-      var candidate = {
-        candidate: event.candidate.candidate,
-        sdpMid: event.candidate.sdpMid,
-        sdpMLineIndex: event.candidate.sdpMLineIndex
-      };
-      this._post({type: 'icecandidate', from: this.me, candidate: candidate});
+      this._post({
+        type: 'icecandidate',
+        peer: this.peer,
+        payload: {candidate: event.candidate}
+      });
     }
   },
 
@@ -110,7 +119,11 @@ HiBuddyApp.prototype = {
     this.peerConnection.createOffer(function(offer) {
       this.peerConnection.setLocalDescription(offer, function() {
         // Send offer
-        this._post({type: 'offer', from: this.me, offer: offer});
+        this._post({
+          type: 'offer',
+          peer: this.peer,
+          payload: {offer: offer}
+        });
       }.bind(this));
     }.bind(this), function() {});
   },
@@ -120,16 +133,22 @@ HiBuddyApp.prototype = {
     this.peerConnection.createAnswer(function(answer) {
       this.peerConnection.setLocalDescription(answer, function() {
         // Send answer
-        this._post({type: 'answer', from: this.me, answer: answer});
+        this._post({
+          type: 'answer',
+          peer: this.peer,
+          payload: {answer: answer}
+        });
       }.bind(this));
     }.bind(this), function() {});
   },
 
-  _post: function(data) {
+  _post: function(message) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/rooms/' + this.room + '/signalling', true);
+    message.token = this.token
+
+    xhr.open('POST', '/api/rooms/' + this.room, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.send(JSON.stringify(data));
+    xhr.send(JSON.stringify(message));
   }
 
 };
