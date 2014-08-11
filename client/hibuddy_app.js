@@ -14,7 +14,7 @@ HiBuddyApp.prototype = {
     this.config = {
       iceServers: [{
         // please contact me if you plan to use this server
-        url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+        url: 'turn:webrtc.monkeypatch.me:1025?transport=udp',
         credential: 'hibuddy',
         username: 'hibuddy'
       }]
