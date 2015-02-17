@@ -3,5 +3,5 @@
 var HibuddyServer = require("../server");
 var server = new HibuddyServer({root: "/api"});
 
-server.run(6424);
-console.log("Listening on port 6424");
+server.run();
+console.log("Listening on port " + server.config.get('port'));
